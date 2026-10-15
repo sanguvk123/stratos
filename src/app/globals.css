@@ -1,0 +1,458 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------------------------------
+   STRATOS design system.
+   Tokens first, then the arcade primitives (buttons, cards), then the sky, then the reveal
+   motion. Every duration and curve used by an animation is a variable here, so the feel of the
+   game is tuned in one place. Animations use transform and opacity only.
+   ------------------------------------------------------------------------------------------ */
+
+:root {
+  color-scheme: dark;
+
+  --font-display: ui-rounded, 'SF Pro Rounded', 'Arial Rounded MT Bold', Nunito, 'Trebuchet MS', system-ui,
+    sans-serif;
+
+  /* Motion tokens. Mirrored in src/lib/motion.ts. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-launch: cubic-bezier(0.5, 0, 0.9, 0.4);
+  --dur-press: 90ms;
+  --dur-pop: 420ms;
+  --dur-reveal: 600ms;
+  --dur-sky: 2500ms;
+
+  /* Shared surface colours. */
+  --ink-on-light: #12071f;
+  --card-top: rgba(16, 20, 78, 0.9);
+  --card-bottom: rgba(8, 10, 46, 0.94);
+}
+
+body {
+  background: #04051a;
+  color: #f4f7ff;
+  font-feature-settings: 'tnum' 1;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 3px solid #b8f23a;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ cards */
+
+.card-arcade {
+  background: linear-gradient(180deg, var(--card-top), var(--card-bottom));
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  box-shadow:
+    0 18px 50px rgba(2, 3, 30, 0.5),
+    inset 0 2px 0 rgba(255, 255, 255, 0.09);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chip-glass {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.chip-lime {
+  background: #b8f23a;
+  color: #14210a;
+}
+
+.chip-violet {
+  background: #7c3aed;
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  padding: 0.7rem 1.6rem;
+  border: 0;
+  border-radius: 9999px;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur-press) var(--ease-out),
+    box-shadow var(--dur-press) var(--ease-out),
+    filter var(--dur-press) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-lg {
+  min-height: 62px;
+  padding: 0.9rem 2.1rem;
+  font-size: 1.2rem;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(5px);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Primary: the call to action. Dark ink on a bright orange, so contrast is high. */
+.btn-primary {
+  color: #2a0f02;
+  background: linear-gradient(180deg, #ffc23d, #ff7a3d);
+  box-shadow:
+    0 6px 0 #b04a1a,
+    0 16px 26px rgba(255, 122, 61, 0.38);
+}
+.btn-primary:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 #b04a1a,
+    0 5px 12px rgba(255, 122, 61, 0.3);
+}
+
+/* Lock: the answer action, in acid lime. */
+.btn-lock {
+  color: #12200a;
+  background: linear-gradient(180deg, #dcff6a, #9fe21e);
+  box-shadow:
+    0 6px 0 #5e8d0b,
+    0 16px 26px rgba(184, 242, 58, 0.32);
+}
+.btn-lock:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 #5e8d0b,
+    0 5px 12px rgba(184, 242, 58, 0.25);
+}
+
+.btn-secondary {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.28);
+}
+.btn-secondary:active:not(:disabled) {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+}
+
+.btn-ghost {
+  color: #e6ecff;
+  background: transparent;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------------------------------------------------- answer field */
+
+.answer-input {
+  width: 100%;
+  min-height: 62px;
+  border: 3px solid rgba(127, 227, 255, 0.7);
+  border-radius: 20px;
+  background: rgba(3, 5, 34, 0.75);
+  padding: 0 1.1rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  transition:
+    border-color var(--dur-press) var(--ease-out),
+    box-shadow var(--dur-press) var(--ease-out);
+}
+.answer-input::placeholder {
+  color: rgba(200, 214, 255, 0.5);
+  font-weight: 500;
+}
+.answer-input:focus {
+  outline: none;
+  border-color: #b8f23a;
+  box-shadow: 0 0 0 5px rgba(184, 242, 58, 0.25);
+}
+.answer-input:read-only {
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------------ gradient text */
+
+.text-gradient-sky {
+  background: linear-gradient(90deg, #ffffff, #bfe9ff 45%, #d9b8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-hot {
+  background: linear-gradient(180deg, #fff3b0, #ffb02e 55%, #ff6b57);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------------- sky */
+
+/* Stars: sparse, twinkling. Faded in by the Sky as the climber rises. */
+.stars {
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 14%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 18% 62%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 27% 33%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 38% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.6px 1.6px at 47% 9%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 55% 51%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 63% 24%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 71% 70%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.6px 1.6px at 80% 41%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1px 1px at 88% 12%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 93% 58%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 14% 90%, rgba(255, 255, 255, 0.6), transparent);
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+
+.stars-far {
+  background-image:
+    radial-gradient(2.2px 2.2px at 12% 28%, rgba(190, 220, 255, 0.95), transparent),
+    radial-gradient(2.4px 2.4px at 34% 11%, rgba(255, 220, 255, 0.9), transparent),
+    radial-gradient(2px 2px at 58% 66%, rgba(200, 240, 255, 0.9), transparent),
+    radial-gradient(2.4px 2.4px at 77% 22%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(2px 2px at 91% 74%, rgba(220, 200, 255, 0.9), transparent);
+  animation: twinkle 4s ease-in-out 1s infinite alternate;
+}
+
+/* A soft cloud with no blur filter: stacked radial gradients that fade to transparent. */
+.cloud {
+  background:
+    radial-gradient(closest-side at 22% 62%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 100%),
+    radial-gradient(closest-side at 50% 42%, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 100%),
+    radial-gradient(closest-side at 78% 62%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 100%);
+  animation: cloud-fall linear infinite;
+  will-change: transform;
+}
+
+.cloud-far {
+  opacity: 0.55;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+
+/* Clouds drift DOWN the screen: the climber is the one going up. */
+@keyframes cloud-fall {
+  from { transform: translate3d(0, -35vh, 0); }
+  to { transform: translate3d(0, 135vh, 0); }
+}
+
+/* The rocket: idle bob, and the launch played when an answer locks. */
+.rocket {
+  transform-origin: 50% 80%;
+  will-change: transform;
+}
+
+.rocket-idle {
+  animation: rocket-bob 3.4s ease-in-out infinite;
+}
+
+.rocket-launch {
+  animation: rocket-launch var(--launch-seconds, 2s) var(--ease-launch) both;
+}
+
+.rocket .flame {
+  transform-origin: 50% 0;
+  animation: flame 120ms ease-in-out infinite alternate;
+}
+
+@keyframes rocket-bob {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  50% { transform: translate3d(0, -10px, 0) rotate(2deg); }
+}
+
+/* Up and away, then a new rocket rises into place from below. */
+@keyframes rocket-launch {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+  52% { transform: translate3d(0, -130vh, 0) scale(0.7); opacity: 1; }
+  53% { transform: translate3d(0, -130vh, 0) scale(0.7); opacity: 0; }
+  68% { transform: translate3d(0, 40vh, 0) scale(1); opacity: 0; }
+  100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+}
+
+@keyframes flame {
+  from { transform: scaleY(0.85); }
+  to { transform: scaleY(1.25); }
+}
+
+.speed-line {
+  animation: speed-line var(--launch-seconds, 2s) var(--ease-launch) both;
+}
+
+.boost-flash {
+  animation: boost-flash 700ms ease-out both;
+}
+
+.spark {
+  border-radius: 9999px;
+  animation: spark-rise calc(var(--launch-seconds, 2s) * 0.9) var(--ease-out) both;
+}
+
+@keyframes speed-line {
+  0% { transform: translate3d(0, -120%, 0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate3d(0, 130vh, 0); opacity: 0; }
+}
+
+@keyframes boost-flash {
+  from { opacity: 0.4; }
+  to { opacity: 0; }
+}
+
+@keyframes spark-rise {
+  0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+  100% { transform: translate3d(0, -75vh, 0) scale(0.3); opacity: 0; }
+}
+
+/* ----------------------------------------------------------------- reveal motion */
+
+.reveal-in {
+  animation: reveal-in 500ms var(--ease-out) both;
+}
+
+/* Staged entrance: set animation-delay inline to sequence a reveal. */
+.stage {
+  animation: stage-in var(--dur-reveal) var(--ease-spring) both;
+}
+
+.pop {
+  animation: pop var(--dur-pop) var(--ease-spring) both;
+}
+
+.stamp {
+  animation: stamp 520ms var(--ease-spring) both;
+}
+
+.shake {
+  animation: shake 420ms ease-in-out both;
+}
+
+.shake-big {
+  animation: shake-big 700ms ease-in-out both;
+}
+
+.pulse-urgent {
+  animation: pulse-urgent 700ms ease-in-out infinite alternate;
+}
+
+@keyframes reveal-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes stage-in {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.92); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes stamp {
+  0% { opacity: 0; transform: scale(2.2) rotate(-12deg); }
+  60% { opacity: 1; transform: scale(0.92) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-6px, 0, 0); }
+  40% { transform: translate3d(6px, 0, 0); }
+  60% { transform: translate3d(-4px, 0, 0); }
+  80% { transform: translate3d(4px, 0, 0); }
+}
+
+@keyframes shake-big {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+  15% { transform: translate3d(-8px, 3px, 0) rotate(-0.6deg); }
+  30% { transform: translate3d(8px, -3px, 0) rotate(0.6deg); }
+  45% { transform: translate3d(-6px, 2px, 0) rotate(-0.4deg); }
+  60% { transform: translate3d(6px, -2px, 0) rotate(0.4deg); }
+  80% { transform: translate3d(-3px, 1px, 0) rotate(0); }
+}
+
+@keyframes pulse-urgent {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+
+/* --------------------------------------------------------- reduced motion */
+
+/* Everything that moves is switched off or snapped to its end state, and the launch effects are
+   removed entirely. Scores, tiers and the countdown are untouched: they are not animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .stars,
+  .stars-far,
+  .cloud,
+  .rocket-idle,
+  .rocket-launch,
+  .rocket .flame,
+  .pulse-urgent,
+  .shake,
+  .shake-big {
+    animation: none !important;
+  }
+  /* The rocket itself stays (it is part of the identity); only its travel and the effects go. */
+  .speed-line,
+  .boost-flash,
+  .spark {
+    display: none !important;
+  }
+}

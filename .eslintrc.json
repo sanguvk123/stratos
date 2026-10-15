@@ -1,0 +1,27 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/services/*", "@/lib/*", "@/app/*", "@/components/*"],
+            "message": "src/domain must stay pure: no I/O and no imports from services, lib, app or components."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/domain/**/*.ts"],
+      "rules": {}
+    },
+    {
+      "files": ["src/**/*.ts", "src/**/*.tsx", "tests/**/*.ts"],
+      "excludedFiles": ["src/domain/**/*.ts"],
+      "rules": { "no-restricted-imports": "off" }
+    }
+  ]
+}
